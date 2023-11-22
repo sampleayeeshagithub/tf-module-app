@@ -4,34 +4,34 @@ resource "aws_security_group" "security_group" {
   vpc_id      = var.vpc_id
 
   ingress {
-    description      = "Http"
-    from_port        = var.app_port
-    to_port          = var.app_port
-    protocol         = "tcp"
-    cidr_blocks      = [var.vpc_cidr]
+    description = "HTTP"
+    from_port   = var.app_port
+    to_port     = var.app_port
+    protocol    = "tcp"
+    cidr_blocks = [var.vpc_cidr]
   }
 
   ingress {
-    description      = "SSH"
-    from_port        = 22
-    to_port          = 22
-    protocol         = "tcp"
-    cidr_blocks      = var.bastion_node_cidr
+    description = "SSH"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = var.bastion_node_cidr
   }
 
   ingress {
-    description      = "prometheus"
-    from_port        = 9100
-    to_port          = 9100
-    protocol         = "tcp"
-    cidr_blocks      = var.prometheus_cidr
+    description = "PROMETHEUS"
+    from_port   = 9100
+    to_port     = 9100
+    protocol    = "tcp"
+    cidr_blocks = var.prometheus_cidr
   }
 
   egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = {
@@ -60,20 +60,20 @@ resource "aws_iam_role" "role" {
     name = "${var.env}-${var.component}-policy"
 
     policy = jsonencode({
-      "Version": "2012-10-17",
-      "Statement": [
+      "Version" : "2012-10-17",
+      "Statement" : [
         {
-          "Sid": "VisualEditor0",
-          "Effect": "Allow",
-          "Action": [
+          "Sid" : "VisualEditor0",
+          "Effect" : "Allow",
+          "Action" : [
             "kms:Decrypt",
             "ssm:DescribeParameters",
-        	"ssm:GetParameterHistory",
+            "ssm:GetParameterHistory",
             "ssm:GetParametersByPath",
             "ssm:GetParameters",
             "ssm:GetParameter"
-    	  ],
-          "Resource": "*"
+          ],
+          "Resource" : "*"
         }
       ]
     })
@@ -90,10 +90,11 @@ resource "aws_iam_instance_profile" "instance_profile" {
 }
 
 resource "aws_launch_template" "template" {
-  name = "${var.env}-${var.component}"
-  image_id = data.aws_ami.ami.id
-  instance_type = var.instance_type
+  name                   = "${var.env}-${var.component}"
+  image_id               = data.aws_ami.ami.id
+  instance_type          = var.instance_type
   vpc_security_group_ids = [aws_security_group.security_group.id]
+
 
   iam_instance_profile {
     name = aws_iam_instance_profile.instance_profile.name

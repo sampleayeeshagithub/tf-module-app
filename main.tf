@@ -12,20 +12,20 @@ resource "aws_security_group" "security_group" {
   }
 
   ingress {
-      description      = "SSH"
-      from_port        = 22
-      to_port          = 22
-      protocol         = "tcp"
-      cidr_blocks      = var.bastion_node_cidr
+    description      = "SSH"
+    from_port        = 22
+    to_port          = 22
+    protocol         = "tcp"
+    cidr_blocks      = var.bastion_node_cidr
   }
 
   ingress {
-        description      = "prometheus"
-        from_port        = 9100
-        to_port          = 9100
-        protocol         = "tcp"
-        cidr_blocks      = var.prometheus_cidr
-    }
+    description      = "prometheus"
+    from_port        = 9100
+    to_port          = 9100
+    protocol         = "tcp"
+    cidr_blocks      = var.prometheus_cidr
+  }
 
   egress {
     from_port        = 0
